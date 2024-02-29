@@ -397,22 +397,12 @@ void fillPolygon(std::vector<Edge> edges, GColor color, BlendProc proc, GBitmap 
         //should not need this if statement (also in shaderFill)
         if(aIntersect >= fDevice.width()){
             aIntersect = fDevice.width() - 1;
-            // GPixel* dst = fDevice.getAddr(aIntersect, i);
-            // if(proc == clear_mode){
-            //     std::fill_n(dst, pixels_in_row, GPixel_PackARGB(0, 0, 0, 0)); 
-            // }
-            // if(proc == src_mode){
-            //     std::fill_n(dst, pixels_in_row, src);
-            // }
-            // blitRow(aIntersect, i, pixels_in_row, proc, fDevice, src);
         }
         
 
         blitRow(aIntersect, i, pixels_in_row, proc, fDevice, src);
 
        if(b.lastRow(i)){
-            // std::cout<<"b bottom: "<<b.bottom<<std::endl;
-            // b = edges.back();
             edges.pop_back();
             if(edges.empty()){
                 break;
@@ -428,8 +418,6 @@ void fillPolygon(std::vector<Edge> edges, GColor color, BlendProc proc, GBitmap 
 
         //are we still with second to last edge in edges
         if (a.lastRow(i)){
-            // std::cout<<"a bottom: "<<a.bottom<<std::endl;
-
             // a = edges.back();
             edges.pop_back();
             if(edges.empty()){

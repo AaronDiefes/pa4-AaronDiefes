@@ -95,6 +95,10 @@ std::unique_ptr<GShader> GCreateBitmapShader(const GBitmap& fDevice, const GMatr
         return std::unique_ptr<GShader>(new MyShader(fDevice, fMat));
 }
 
+// std::unique_ptr<GShader> GCreateLinearGradient(GPoint p0, GPoint p1, const GColor[], int count){
+//         return std::unique_ptr<GShader>(new MyShader(fDevice, fMat));
+// }
+
 void shadeFillPolygon(GShader* sh, std::vector<Edge> edges, GBitmap fDevice, std::vector<GMatrix> ctm, BlendProc proc){
     int bot = edges[0].bottom;
     int t = edges[edges.size() - 1].top;
@@ -115,21 +119,6 @@ void shadeFillPolygon(GShader* sh, std::vector<Edge> edges, GBitmap fDevice, std
         
         int pixels_in_row = bIntersect - aIntersect;
         
-        // GPixel* dst = fDevice.getAddr(aIntersect, i);
-
-        // //if dst.a == 1
-        // if (GPixel_GetA(*dst) == 255){
-        //     if(proc == dst_over_mode){proc = clear_mode;}
-        //     if(proc == src_out_mode){proc = clear_mode;}
-        //     if(proc == dst_atop_mode){proc = dst_in_mode;}
-        //     if(proc == xor_mode){proc = dst_out_mode;}
-        // }
-        // //if dst.a == 0
-        // if(GPixel_GetA(*dst) == 0){
-        //     if(proc == src_in_mode){proc = clear_mode;}
-        //     if(proc == src_atop_mode){proc = dst_out_mode;}
-        // }
-
         GPixel row[pixels_in_row];
         if(aIntersect < fDevice.width()){
           sh->shadeRow(aIntersect, i, pixels_in_row, row);
@@ -150,7 +139,6 @@ void shadeFillPolygon(GShader* sh, std::vector<Edge> edges, GBitmap fDevice, std
 
         }
         if (a.lastRow(i)){
-            // std::cout<<"a bottom: "<<a.bottom<<std::endl;
             edges.pop_back();
             if(edges.empty()){
                 break;
