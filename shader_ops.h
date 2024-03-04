@@ -3,20 +3,18 @@
 #include "include/GShader.h"
 #include "include/GPaint.h"
 #include "include/GPixel.h"
-#include "include/GBitmap.h"
+#include "include/GBitmap.h" 
 #include "include/GMatrix.h"
 #include "include/GPoint.h"
 #include "Edge.h"
 #include <iostream>
 #include "blend_functions.h"
+#include "include/GColor.h"
+#include "my_utils.h"
 
-
-
-
-
-class MyShader:public GShader{
+class MyBMShader:public GShader{
   public: 
-    MyShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {}
+    MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {}
 
     bool isOpaque() override{
         return fDevice.isOpaque();
@@ -91,13 +89,86 @@ class MyShader:public GShader{
     GMatrix inv;
 };
 
+class MyGradientShader:public GShader{
+  public:
+    MyGradientShader(GPoint p0, GPoint p1, const GColor colors[], int count) : p0(p0), p1(p1), count(count) {
+      for (int i = 0; i < count ; i++){
+        gradient_colors.push_back(colors[i]);
+      }
+    }
+
+    bool isOpaque() override{
+
+    }
+
+    bool setContext(const GMatrix& ctm) override{
+      GMatrix linear_transformation_matrix = GMatrix(
+        p1.x - p0.x,    -(p1.y - p0.y),   p0.x,
+        p1.y - p0.y,    p1.x - p0.x,      p0.y
+      );
+      
+      GMatrix temp = ctm * linear_transformation_matrix;
+      if(auto inverted = temp.invert()){
+          inv = *inverted;
+          return true;
+      }
+      return false;
+    }
+
+    void shadeRow(int x, int y, int c, GPixel row[]) override{
+
+      float x_prime = (inv[0] * (x + 0.5f) + inv[2] * (y + 0.5f) + inv[4]) * (count - 1); //x' = ax + cy + e
+
+      for(int i = 0; i < c; i++){
+        // int xCurr = GFloorToInt(x_prime);
+        // xCurr = xCurr.MyBMShader::clamp_x(xCurr);
+        
+        // float x_prime = (inv[0] * (x + 0.5f + i) + inv[2] * (y + 0.5f) + inv[4]) * (count - 1); //x' = ax + cy + e
+
+        float currX = x_prime;
+        if(currX < 0){
+          currX = 0;
+        }
+        if(currX > count - 1){
+          currX = count - 1;
+        }
+        int k = floor(currX);
+        float d0 = currX - (float)k;
+        assert(0 <= d0 <= 1);
+        // float t = d0 * (count - 1);
+        // if(k == count - 1){
+        //   gradient_color = (1-d0)*gradient_colors[k];
+        // }
+       
+        GColor gradient_color = (1-d0)*gradient_colors[k] + ((d0) * gradient_colors[k + 1]);
+
+        
+        row[i] = unpremult(gradient_color);
+        //GPixel_PackARGB(unpremult(gradient_color.a), GRoundToInt(255*gradient_color.r*gradient_color.a), GRoundToInt(255*gradient_color.g*gradient_color.a), GRoundToInt(255*gradient_color.b*gradient_color.a));
+
+        x_prime += inv[0]*(count - 1);
+
+      }
+      
+    }
+
+  private:
+    GPoint p0;
+    GPoint p1;
+    int count;  
+    std::vector<GColor> gradient_colors; 
+    GMatrix inv;
+};
+
 std::unique_ptr<GShader> GCreateBitmapShader(const GBitmap& fDevice, const GMatrix& fMat){
-        return std::unique_ptr<GShader>(new MyShader(fDevice, fMat));
+        return std::unique_ptr<GShader>(new MyBMShader(fDevice, fMat));
 }
 
-// std::unique_ptr<GShader> GCreateLinearGradient(GPoint p0, GPoint p1, const GColor[], int count){
-//         return std::unique_ptr<GShader>(new MyShader(fDevice, fMat));
-// }
+std::unique_ptr<GShader> GCreateLinearGradient(GPoint p0, GPoint p1, const GColor colors[], int count){
+        return std::unique_ptr<GShader>(new MyGradientShader(p0, p1, colors, count));
+}
+
+
 
 void shadeFillPolygon(GShader* sh, std::vector<Edge> edges, GBitmap fDevice, std::vector<GMatrix> ctm, BlendProc proc){
     int bot = edges[0].bottom;

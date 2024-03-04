@@ -55,10 +55,6 @@ void MyCanvas::drawConvexPolygon(const GPoint points[], int count, const GPaint&
 
     mat.mapPoints(dst, points, count);
     
-    // for(int i = 0; i < count; i++){
-    //     std:cout<<" point x: "<<dst[i].x<<std::endl;
-    // }
-    // std::cout<<"fDevice width: "<<fDevice.width()<<std::endl;
     std::vector <Edge> edges;
     
     //create array of edges

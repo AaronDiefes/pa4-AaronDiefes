@@ -121,7 +121,6 @@ GPixel dst_out_mode(GPixel src, GPixel dest){
             int dg = GPixel_GetG(dest);
             int db = GPixel_GetB(dest);
 
-            
             int ba = div255((255-sa)*da);
             int br = div255((255-sa)*dr);
             int bg = div255((255-sa)*dg);
