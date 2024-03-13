@@ -92,9 +92,12 @@ class MyBMShader:public GShader{
 class MyGradientShader:public GShader{
   public:
     MyGradientShader(GPoint p0, GPoint p1, const GColor colors[], int count) : p0(p0), p1(p1), count(count) {
-      for (int i = 0; i < count ; i++){
+      for (int i = 0; i < count; i++){
         gradient_colors.push_back(colors[i]);
+        // delta_colors.push_back(colors[i + 1] - colors[i]);
       }
+      // gradient_colors.push_back(colors[count - 1]);
+      // delta_colors.push_back(GColor{0, 0, 0, 0});
     }
 
     bool isOpaque() override{
@@ -119,12 +122,10 @@ class MyGradientShader:public GShader{
 
       float x_prime = (inv[0] * (x + 0.5f) + inv[2] * (y + 0.5f) + inv[4]) * (count - 1); //x' = ax + cy + e
 
+      // for(int i = 0; i < count; i++){
+      //   std::cout<<"delta a: "<<delta_colors[i].a<<std::endl;
+      // }
       for(int i = 0; i < c; i++){
-        // int xCurr = GFloorToInt(x_prime);
-        // xCurr = xCurr.MyBMShader::clamp_x(xCurr);
-        
-        // float x_prime = (inv[0] * (x + 0.5f + i) + inv[2] * (y + 0.5f) + inv[4]) * (count - 1); //x' = ax + cy + e
-
         float currX = x_prime;
         if(currX < 0){
           currX = 0;
@@ -133,23 +134,21 @@ class MyGradientShader:public GShader{
           currX = count - 1;
         }
         int k = floor(currX);
-        float d0 = currX - (float)k;
-        assert(0 <= d0 <= 1);
-        // float t = d0 * (count - 1);
-        // if(k == count - 1){
-        //   gradient_color = (1-d0)*gradient_colors[k];
-        // }
+        float t = currX - (float)k;
        
-        GColor gradient_color = (1-d0)*gradient_colors[k] + ((d0) * gradient_colors[k + 1]);
+        GColor gradient_color = (1-t)*gradient_colors[k] + ((t) * gradient_colors[k + 1]);
+        // assert(0 <= t <= 1);
+        // std::cout<<"t: "<<t<<std::endl;
 
+        // GColor delta = delta_colors[i];
+        // std::cout<<"delta a: "<<delta.a<<std::endl;
+
+        // GColor gradient_color = t * delta_colors[i];
         
         row[i] = unpremult(gradient_color);
-        //GPixel_PackARGB(unpremult(gradient_color.a), GRoundToInt(255*gradient_color.r*gradient_color.a), GRoundToInt(255*gradient_color.g*gradient_color.a), GRoundToInt(255*gradient_color.b*gradient_color.a));
 
         x_prime += inv[0]*(count - 1);
-
-      }
-      
+      }  
     }
 
   private:
@@ -157,6 +156,7 @@ class MyGradientShader:public GShader{
     GPoint p1;
     int count;  
     std::vector<GColor> gradient_colors; 
+    std::vector<GColor> delta_colors;
     GMatrix inv;
 };
 

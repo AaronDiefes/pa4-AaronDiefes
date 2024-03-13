@@ -12,6 +12,7 @@ class Edge {
 public:
     int top, bottom;
     float m, x;
+    int dir;
 
 
     Edge(GPoint p0, GPoint p1, GBitmap fDevice) { 

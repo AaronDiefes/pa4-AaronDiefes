@@ -2,6 +2,7 @@
 #include "include/GCanvas.h"
 #include "include/GColor.h"
 #include "include/GMath.h"
+#include "include/GPath.h"
 #include "include/GPixel.h"
 #include "include/GPoint.h"
 #include "include/GRandom.h"
@@ -139,7 +140,13 @@ void MyCanvas::concat(const GMatrix& matrix) {
 }
 
 void MyCanvas::drawPath(const GPath& path, const GPaint&){
-    
+    GPath::Edger edger(path);
+    //edger.next(put next point in here)
+    //make the edges
+    tempPoints = path.fPts;
+    while( (edger.next(tempPoints)) != GPath::kDone) {
+        edges.emplace_back(tempPoints[0], tempPoints[1]);
+    }
 }
 
 
