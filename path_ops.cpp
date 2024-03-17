@@ -1,4 +1,3 @@
-
 #include "include/GPath.h"
 //acts on a GPath
 //GPath has rectangle, what are bounds and orientation
@@ -30,7 +29,6 @@ void GPath::addPolygon(const GPoint pts[], int count){
 GRect GPath::bounds() const{
     if(fPts.size() == 0){
         return GRect{0, 0, 0, 0};
-
     }
     
     float minX = fPts[0].x;

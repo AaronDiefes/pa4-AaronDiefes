@@ -95,6 +95,7 @@ void MyCanvas::drawConvexPolygon(const GPoint points[], int count, const GPaint&
         GColor color = paint.getColor();
         GBlendMode mode_type = paint.getBlendMode();
         BlendProc proc = gProcs[(int)mode_type];
+        // BlendProc proc = getBlendMode(gProcs[(int)mode_type], color);
 
         if(color.a == 1){
             if(proc == src_over_mode){proc = src_mode;}
@@ -139,15 +140,145 @@ void MyCanvas::concat(const GMatrix& matrix) {
     top = GMatrix::Concat(top, matrix);
 }
 
-void MyCanvas::drawPath(const GPath& path, const GPaint&){
-    GPath::Edger edger(path);
-    //edger.next(put next point in here)
-    //make the edges
-    tempPoints = path.fPts;
-    while( (edger.next(tempPoints)) != GPath::kDone) {
-        edges.emplace_back(tempPoints[0], tempPoints[1]);
+void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
+    
+    GPixel src;
+    BlendProc proc;
+    if(paint.getShader()){
+        GShader* sh = paint.getShader();
+        if(sh->setContext(ctm[ctm.size() - 1])){
+            GBlendMode mode_type = paint.getBlendMode();
+            BlendProc proc = gProcs[(int)mode_type];
+            if(sh->isOpaque()){
+                if(proc == src_over_mode){proc = src_mode;}
+                if(proc == src_over_mode){proc = dst_mode;}
+                if(proc == dst_out_mode){proc = clear_mode;}
+                if(proc == src_atop_mode){proc = src_in_mode;}
+                if(proc == xor_mode){proc = src_out_mode;}
+            }
+        }
     }
-}
+    else{
+        GColor color = paint.getColor();
+        GBlendMode mode_type = paint.getBlendMode();
+        BlendProc proc = gProcs[(int)mode_type];
+        // BlendProc proc = getBlendMode(gProcs[(int)mode_type], color);
+        GPixel src = unpremult(color);
+
+        if(color.a == 1){
+                if(proc == src_over_mode){proc = src_mode;}
+                if(proc == src_over_mode){proc = dst_mode;}
+                if(proc == dst_out_mode){proc = clear_mode;}
+                if(proc == src_atop_mode){proc = src_in_mode;}
+                if(proc == xor_mode){proc = src_out_mode;}
+        }
+        if(color.a == 0){
+            if(proc == src_mode){proc = clear_mode;}
+            if(proc == src_over_mode){proc = dst_mode;}
+            if(proc == dst_over_mode){proc = dst_mode;}
+            if(proc == src_in_mode){proc = clear_mode;}
+            if(proc == dst_in_mode){proc = clear_mode;}
+            if(proc == src_out_mode){proc = clear_mode;}
+            // if(proc == dst_out_mode){proc = clear_mode;}
+            if(proc == src_atop_mode){proc = dst_mode;}
+            // if(proc == dst_atop_mode){proc = clear_mode;}
+            if(proc == xor_mode){proc = dst_mode;}
+        }
+    }
+    //transform all points before creating edges
+    GMatrix mat = ctm[ctm.size() - 1];
+    GPath copy = path;
+    copy.transform(mat);
+
+    GPath::Edger edger(copy); 
+    std::vector<Edge> edges;
+    GPoint tempPoints[GPath::kMaxNextPoints];
+    //whiile the current verb is not the stop verb
+    while(auto verb = edger.next(tempPoints)) {
+        switch (verb.value()){
+            case GPath::kLine:  Edge::clip(tempPoints[0], tempPoints[1], fDevice, edges);
+        }
+    }
+
+    //first sort in y, then in x
+    std::sort(edges.begin(), edges.end(), [](Edge& a, Edge& b) {
+        if(a.top == b.top){
+            //I think this is initial x, check later
+            return a.left_x < b.left_x;
+        }
+        return a.top < b.top;
+    });
+
+    // for(int i = 0; i < edges.size(); i++){
+    //     std::cout<<"edge top: "<<edges[i].top<<" edge bottom: "<<edges[i].bottom<<" edge slope: "<<edges[i].m<<" edge x: "<<edges[i].x<<" edge dir: "<<edges[i].dir<<std::endl;
+    // }
+
+    GRect bound = path.bounds();
+
+    int yMin = 0;//bound.top;
+    int yMax = fDevice.height(); // bound.bottom;
+
+
+    //loop through all y values containing edges from top to bottom
+    for(int y = yMin; y < yMax; y++){
+        size_t i = 0;
+        int w = 0;
+        int L = 0;
+        int R = 0;
+        // std::cout<<" current y: "<<y<<std::endl;
+        //loop through active edges an given y value
+        while (i < edges.size() && edges[i].isValid(y)) {
+            int x = GRoundToInt(edges[i].eval(y));
+            if (w == 0) {
+                L = x;
+            }
+            w += edges[i].dir;  
+            if (w == 0) {
+		        int R = x;
+                if(paint.getShader()){
+                    GShader* sh = paint.getShader();
+                    if(sh->setContext(ctm[ctm.size() - 1])){
+                        GPixel row[R-L];
+                        sh->shadeRow(L, y, R - L, row);
+                        for(int j = 0; j < R-L; j++){
+                            GBlendMode mode_type = paint.getBlendMode();
+                            BlendProc proc = gProcs[(int)mode_type];
+                            blitRow(L+j, y, 1, proc, fDevice, row[j]);
+                        }
+                        // shadeBlendRow(L, y, R-L, proc, fDevice, row);
+                    }
+                }
+                else{
+                    blitRow(L, y, R - L, proc, fDevice, src);
+                }
+            }
+
+            if (edges[i].isValid(y+1)) {
+                i += 1;
+            } 
+
+            else {
+                edges.erase(edges.end() - i);	// we’re done with this edge
+            }
+            // std::cout<<w<<std::endl;
+        }
+
+        assert(w == 0);
+        // account for any new edges that will be valid for next y
+        while (i < edges.size() && edges[i].isValid(y+1)) {
+            i += 1;
+        }
+        // now i also includes the number of edges that will be valid
+        
+        //sort_edges( [0…i) based on computed X for y+1 )
+        //right now, just sorts all edges 
+        std::sort(edges.begin(), edges.end(), [y](Edge& a, Edge& b) {
+            //is this the y+1 x values right now, or just the old y-computed x-values?
+            return GRoundToInt(a.eval(y+1)) > GRoundToInt(b.eval(y+1));
+        });
+        
+        }
+    }
 
 
 std::string GDrawSomething(GCanvas* canvas, GISize dim) {

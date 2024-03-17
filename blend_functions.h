@@ -427,4 +427,27 @@ void fillPolygon(std::vector<Edge> edges, GColor color, BlendProc proc, GBitmap 
         }
     }
 }
+BlendProc getBlendMode(BlendProc proc, GColor color){
+    BlendProc new_proc;
+    if(color.a == 1){
+            if(proc == src_over_mode){new_proc = src_mode;}
+            if(proc == src_over_mode){new_proc = dst_mode;}
+            if(proc == dst_out_mode){new_proc = clear_mode;}
+            if(proc == src_atop_mode){new_proc = src_in_mode;}
+            if(proc == xor_mode){new_proc = src_out_mode;}
+    }
+    if(color.a == 0){
+        if(proc == src_mode){new_proc = clear_mode;}
+        if(proc == src_over_mode){new_proc = dst_mode;}
+        if(proc == dst_over_mode){new_proc = dst_mode;}
+        if(proc == src_in_mode){new_proc = clear_mode;}
+        if(proc == dst_in_mode){new_proc = clear_mode;}
+        if(proc == src_out_mode){new_proc = clear_mode;}
+        // if(proc == dst_out_mode){new_proc = clear_mode;}
+        if(proc == src_atop_mode){new_proc = dst_mode;}
+        // if(proc == dst_atop_mode){new_proc = clear_mode;}
+        if(proc == xor_mode){new_proc = dst_mode;}
+    }
+    return new_proc;
+}
 #endif

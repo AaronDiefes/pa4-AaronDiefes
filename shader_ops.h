@@ -101,7 +101,7 @@ class MyGradientShader:public GShader{
     }
 
     bool isOpaque() override{
-
+      
     }
 
     bool setContext(const GMatrix& ctm) override{

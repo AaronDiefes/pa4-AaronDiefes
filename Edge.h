@@ -13,15 +13,22 @@ public:
     int top, bottom;
     float m, x;
     int dir;
+    float left_x;
 
-
+//w-1 + w
+    //(1-w)c1 + w*c2
+    //w = p0.y > p1.y
+    //c1 = -1, c2 = 1
     Edge(GPoint p0, GPoint p1, GBitmap fDevice) { 
-        if (p0.y > p1.y) {
+       int w = p0.y > p1.y;
+       dir = 2*w - 1;
+       
+       if (w) {
             std::swap(p0, p1);
         }
         top = GRoundToInt(p0.y);
         bottom = GRoundToInt(p1.y);
-        
+        left_x = p0.x;
         m = calculateSlope(p0, p1);
 
         // if (top == bottom) {
@@ -33,6 +40,7 @@ public:
         // std::cout<<" x: "<<x<<std::endl; 
 
     }
+   
 
     // Static member function to access the vector of edges
     static std::vector<Edge>& getEdges() {
@@ -199,6 +207,13 @@ public:
     float eval(int y){
         return m * ((float)y + 0.5f) + x;
     }
+
+    bool isValid(int y) const {
+        //returns true if y is within our top and bottom, meaning
+        //this Y is valid for computing our corresponding X.
+        return top <= y && y <= bottom;
+    }
+
 
 
 private:
