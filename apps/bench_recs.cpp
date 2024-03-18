@@ -44,17 +44,17 @@ const GBenchmark::Factory gBenchFactories[] {
         const GColor colors[] = {{ 1, 0, 1, 1 }};
         return new GradientBench(colors, 1, "gradient_1");
     },
-    []() -> GBenchmark* {
-        const GColor colors[] = {{ 1, 0, 0, 1 }, { 0, 1, 1, 1 }};
-        return new GradientBench(colors, 2, "gradient_2");
-    },
-    []() -> GBenchmark* {
-        const GColor colors[] = {{ 1, 0, 0, 1 }, { 0, 1, 1, 1 }, {0, 1, 0, 0}};
-        return new GradientBench(colors, 3, "gradient_3");
-    },
-    []() -> GBenchmark* { return new PathBench("path_small", 0.1f, false); },
-    []() -> GBenchmark* { return new PathBench("path_big",   1.0f, false); },
-    []() -> GBenchmark* { return new PathBench("path_bigc",  1.0f,  true); },
+    // []() -> GBenchmark* {
+    //     const GColor colors[] = {{ 1, 0, 0, 1 }, { 0, 1, 1, 1 }};
+    //     return new GradientBench(colors, 2, "gradient_2");
+    // },
+    // []() -> GBenchmark* {
+    //     const GColor colors[] = {{ 1, 0, 0, 1 }, { 0, 1, 1, 1 }, {0, 1, 0, 0}};
+    //     return new GradientBench(colors, 3, "gradient_3");
+    // },
+    // []() -> GBenchmark* { return new PathBench("path_small", 0.1f, false); },
+    // []() -> GBenchmark* { return new PathBench("path_big",   1.0f, false); },
+    // []() -> GBenchmark* { return new PathBench("path_bigc",  1.0f,  true); },
 
     nullptr,
 };
