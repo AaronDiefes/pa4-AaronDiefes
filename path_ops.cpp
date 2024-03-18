@@ -31,8 +31,8 @@ GRect GPath::bounds() const{
         return GRect{0, 0, 0, 0};
     }
     
-    float minX = 0;
-    float minY = 0;
+    float minX = fPts[0].x;
+    float minY = fPts[0].y;
     float maxX = fPts[0].x;
     float maxY = fPts[0].y;
     
