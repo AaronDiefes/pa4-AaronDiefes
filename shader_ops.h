@@ -14,17 +14,7 @@
 
 class MyBMShader:public GShader{
   public: 
-    MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {
-        std::cout << "MyBMShader constructor called" << std::endl;
-        std::cout << "fDevice width: " << fDevice.width() << ", height: " << fDevice.height() << std::endl;
-        std::cout << "fMat values: " << std::endl;
-        std::cout << fMat[0] << ", " << fMat[1] << ", " << fMat[2] << std::endl;
-        std::cout << fMat[3] << ", " << fMat[4] << ", " << fMat[5] << std::endl;
-    }
-
-    ~MyBMShader() {
-        std::cout << "MyBMShader destructor called" << std::endl;
-    }
+    MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice((device)), fMat(mat) {}
 
     bool isOpaque() override{
         return fDevice.isOpaque();
@@ -44,7 +34,9 @@ class MyBMShader:public GShader{
     void shadeRow(int x, int y, int count, GPixel row[]) override{
       float x_prime = inv[0] * (x + 0.5f) + inv[2] * (y + 0.5f) + inv[4]; //x' = ax + cy + e
       float y_prime = inv[1] * (x + 0.5f) + inv[3] * (y + 0.5f) + inv[5]; //y' = bx + dy + f
-      
+      // if(fDevice->width() == 0 || fDevice->height() == 0){
+      //   return;
+      // }
       if(inv[1] == 0){ // <== if(b == 0), occurs when no rotation in inv
           float x = x_prime;
           int yCurr = clamp_y(GFloorToInt(y_prime));
@@ -76,7 +68,7 @@ class MyBMShader:public GShader{
   
 
     int clamp_x(int x){
-      if(x < 0){
+      if(x <= 0){
         return 0;
       }
       if(x >= fDevice.width()){
@@ -86,7 +78,7 @@ class MyBMShader:public GShader{
     }
 
     int clamp_y(int y){
-      if(y < 0){
+      if(y <= 0){
         return 0;
       }
       if(y >= fDevice.height()){
@@ -95,8 +87,8 @@ class MyBMShader:public GShader{
       return y;
     }
   private:
-    GBitmap fDevice;
-    GMatrix fMat;
+    const GBitmap fDevice;
+    const GMatrix fMat;
     GMatrix inv;
 };
 
