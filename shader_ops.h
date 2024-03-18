@@ -96,7 +96,7 @@ class MyGradientShader:public GShader{
         gradient_colors.push_back(colors[i]);
         // delta_colors.push_back(colors[i + 1] - colors[i]);
       }
-      // gradient_colors.push_back(colors[count - 1]);
+      gradient_colors.push_back(colors[count - 1]);
       // delta_colors.push_back(GColor{0, 0, 0, 0});
     }
 
