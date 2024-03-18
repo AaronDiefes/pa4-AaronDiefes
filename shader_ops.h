@@ -101,7 +101,7 @@ class MyGradientShader:public GShader{
     }
 
     bool isOpaque() override{
-      
+
     }
 
     bool setContext(const GMatrix& ctm) override{
@@ -150,6 +150,7 @@ class MyGradientShader:public GShader{
         x_prime += inv[0]*(count - 1);
       }  
     }
+    
 
   private:
     GPoint p0;

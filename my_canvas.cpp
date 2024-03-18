@@ -163,11 +163,13 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
         GBlendMode mode_type = paint.getBlendMode();
         BlendProc proc = gProcs[(int)mode_type];
         // BlendProc proc = getBlendMode(gProcs[(int)mode_type], color);
-        GPixel src = unpremult(color);
+        // GPixel src = unpremult(color);
+        GPixel src = GPixel_PackARGB(255, 255, 0, 0);
+
 
         if(color.a == 1){
                 if(proc == src_over_mode){proc = src_mode;}
-                if(proc == src_over_mode){proc = dst_mode;}
+                // if(proc == src_over_mode){proc = dst_mode;}
                 if(proc == dst_out_mode){proc = clear_mode;}
                 if(proc == src_atop_mode){proc = src_in_mode;}
                 if(proc == xor_mode){proc = src_out_mode;}
@@ -213,7 +215,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
     //     std::cout<<"edge top: "<<edges[i].top<<" edge bottom: "<<edges[i].bottom<<" edge slope: "<<edges[i].m<<" edge x: "<<edges[i].x<<" edge dir: "<<edges[i].dir<<std::endl;
     // }
 
-    GRect bound = path.bounds();
+    GRect bound = copy.bounds();
 
     int yMin = 0;//bound.top;
     int yMax = fDevice.height(); // bound.bottom;
@@ -232,7 +234,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
             if (w == 0) {
                 L = x;
             }
-            w += edges[i].dir;  
+            w += edges[i].dire;  
             if (w == 0) {
 		        int R = x;
                 if(paint.getShader()){
@@ -258,7 +260,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
             } 
 
             else {
-                edges.erase(edges.end() - i);	// we’re done with this edge
+                edges.erase(edges.begin() + i);	// we’re done with this edge
             }
             // std::cout<<w<<std::endl;
         }
@@ -272,9 +274,9 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
         
         //sort_edges( [0…i) based on computed X for y+1 )
         //right now, just sorts all edges 
-        std::sort(edges.begin(), edges.end(), [y](Edge& a, Edge& b) {
+        std::sort(edges.begin(), edges.begin() + i, [y](Edge& a, Edge& b) {
             //is this the y+1 x values right now, or just the old y-computed x-values?
-            return GRoundToInt(a.eval(y+1)) > GRoundToInt(b.eval(y+1));
+            return GRoundToInt(a.eval(y+1)) < GRoundToInt(b.eval(y+1));
         });
         
         }

@@ -219,7 +219,7 @@ template<typename Proc> void blitRow(int x, int y, int n, Proc blend, GBitmap fD
     }
     else if(blend == src_mode){
         for(int i = 0; i < n; i++){
-            GPixel p = src; \
+            GPixel p = src; 
             dst[i] = p;
         }
     }
@@ -283,12 +283,12 @@ template<typename Proc> void blitRow(int x, int y, int n, Proc blend, GBitmap fD
             dst[i] = p;
         }
     }
-    else{
-        for(int i = 0; i < n; i++){
-            GPixel p = blend(src, dst[i]);
-            dst[i] = p;
-        }
-    }
+    // else{
+    //     for(int i = 0; i < n; i++){
+    //         GPixel p = blend(src, dst[i]);
+    //         dst[i] = p;
+    //     }
+    // }
 }
 template<typename Proc> void shadeBlendRow(int x, int y, int n, Proc blend, GBitmap fDevice, GPixel src[]){
     GPixel* dst = fDevice.getAddr(x, y);
@@ -375,7 +375,6 @@ template<typename Proc> void shadeBlendRow(int x, int y, int n, Proc blend, GBit
 void fillPolygon(std::vector<Edge> edges, GColor color, BlendProc proc, GBitmap fDevice){
 
     GPixel src = unpremult(color);
-    
     int bot = edges[0].bottom;
     int t = edges[edges.size() - 1].top;
 

@@ -12,18 +12,18 @@ class Edge {
 public:
     int top, bottom;
     float m, x;
-    int dir;
+    int dire;
     float left_x;
 
 //w-1 + w
     //(1-w)c1 + w*c2
     //w = p0.y > p1.y
     //c1 = -1, c2 = 1
-    Edge(GPoint p0, GPoint p1, GBitmap fDevice) { 
-       int w = p0.y > p1.y;
-       dir = 2*w - 1;
+    Edge(GPoint p0, GPoint p1, GBitmap fDevice, int dir) { 
+    //    int w = p0.y > p1.y;
+    //    dir = 2*w - 1;
        
-       if (w) {
+       if (p0.y > p1.y) {
             std::swap(p0, p1);
         }
         top = GRoundToInt(p0.y);
@@ -37,6 +37,8 @@ public:
 
         float b = calculateB(p0, p1);
         x = b;
+
+        dire = dir;
         // std::cout<<" x: "<<x<<std::endl; 
 
     }
@@ -50,6 +52,8 @@ public:
 
     static void clip(GPoint p0, GPoint p1, GBitmap fDevice, std::vector<Edge> &edges){
         
+        int w = p0.y > p1.y;
+        int dir = 2*w - 1;
         if (p0.y > p1.y) {
             std::swap(p0, p1);
         }
@@ -87,7 +91,7 @@ public:
         
         //IF edge is completely horizontally contained
         if(p0.x >= left && p1.x < right){
-            Edge inEdge = Edge(p0, p1, fDevice);
+            Edge inEdge = Edge(p0, p1, fDevice, dir);
             // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
             if(inEdge.top < inEdge.bottom){
                 edges.push_back(inEdge);
@@ -99,7 +103,7 @@ public:
         if (p1.x < left) {
             GPoint pp0 = {0, p0.y};
             GPoint pp1 = {0, p1.y};
-            Edge leftEdge = Edge(pp0, pp1, fDevice);
+            Edge leftEdge = Edge(pp0, pp1, fDevice, dir);
             // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
             if(leftEdge.top < leftEdge.bottom){
                 edges.push_back(leftEdge);
@@ -112,7 +116,7 @@ public:
             GPoint pp0 = {fDevice.width(), p0.y};
             GPoint pp1 = {fDevice.width(), p1.y};
 
-            Edge rightEdge = Edge(pp0, pp1, fDevice);
+            Edge rightEdge = Edge(pp0, pp1, fDevice, dir);
             // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
             if(rightEdge.top < rightEdge.bottom){
                 edges.push_back(rightEdge);
@@ -128,7 +132,7 @@ public:
             lc.y = getLeftY(p0, p1);
             GPoint clipped_p0 = {0, p0.y};
                 
-            Edge leftEdge1 = Edge(lc, clipped_p0, fDevice);
+            Edge leftEdge1 = Edge(lc, clipped_p0, fDevice, dir);
             // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
             if(leftEdge1.top < leftEdge1.bottom){
                 edges.push_back(leftEdge1);
@@ -140,7 +144,7 @@ public:
                 rc.y = getRightY(p0, p1, fDevice);
                 GPoint clipped_p1 = {fDevice.width() -1, p1.y};
 
-                Edge rightEdge1 = Edge(rc, clipped_p1, fDevice);
+                Edge rightEdge1 = Edge(rc, clipped_p1, fDevice, dir);
                 if(rightEdge1.top < rightEdge1.bottom){
                     edges.push_back(rightEdge1);
                 }
@@ -150,7 +154,7 @@ public:
 
                 //ADD EDGE between bounds
                 
-                Edge inEdge1 = Edge(lc, rc, fDevice);
+                Edge inEdge1 = Edge(lc, rc, fDevice, dir);
                 // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
                 if(inEdge1.top < inEdge1.bottom){
                     edges.push_back(inEdge1);
@@ -160,7 +164,7 @@ public:
                 // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
                 //TODO: Delete duplicate check if causing problems
             }
-            Edge inEdge2 = Edge(lc, p1, fDevice);
+            Edge inEdge2 = Edge(lc, p1, fDevice, dir);
             if(inEdge2.top < inEdge2.bottom){
                 edges.push_back(inEdge2);
             }
@@ -175,7 +179,7 @@ public:
             GPoint clipped_p1 = {fDevice.width(), p1.y};
 
     
-            Edge rightEdge2 = Edge(rc, clipped_p1, fDevice);
+            Edge rightEdge2 = Edge(rc, clipped_p1, fDevice, dir);
             if(rightEdge2.top < rightEdge2.bottom){
                 edges.push_back(rightEdge2);
             }
@@ -183,7 +187,7 @@ public:
                 
 
 
-            Edge inEdge3 = Edge(p0, rc, fDevice);
+            Edge inEdge3 = Edge(p0, rc, fDevice, dir);
             // std::cout<<"After: p0.x: "<<p0.x<<" p0.y: "<<p0.y<<" p1.x: "<<p1.x<<" p1.y: "<<p1.y<<std::endl;
             if(inEdge3.top < inEdge3.bottom){
                 edges.push_back(inEdge3);
@@ -211,7 +215,7 @@ public:
     bool isValid(int y) const {
         //returns true if y is within our top and bottom, meaning
         //this Y is valid for computing our corresponding X.
-        return top <= y && y <= bottom;
+        return top <= y && y < bottom;
     }
 
 
