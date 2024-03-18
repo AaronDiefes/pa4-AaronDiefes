@@ -83,7 +83,7 @@ void MyCanvas::drawConvexPolygon(const GPoint points[], int count, const GPaint&
             BlendProc proc = gProcs[(int)mode_type];
             if(sh->isOpaque()){
                 if(proc == src_over_mode){proc = src_mode;}
-                if(proc == src_over_mode){proc = dst_mode;}
+                // if(proc == src_over_mode){proc = dst_mode;}
                 if(proc == dst_out_mode){proc = clear_mode;}
                 if(proc == src_atop_mode){proc = src_in_mode;}
                 if(proc == xor_mode){proc = src_out_mode;}
@@ -99,7 +99,7 @@ void MyCanvas::drawConvexPolygon(const GPoint points[], int count, const GPaint&
 
         if(color.a == 1){
             if(proc == src_over_mode){proc = src_mode;}
-            if(proc == src_over_mode){proc = dst_mode;}
+            // if(proc == src_over_mode){proc = dst_mode;}
             if(proc == dst_out_mode){proc = clear_mode;}
             if(proc == src_atop_mode){proc = src_in_mode;}
             if(proc == xor_mode){proc = src_out_mode;}
@@ -151,7 +151,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
             proc = gProcs[(int)mode_type];
             if(sh->isOpaque()){
                 if(proc == src_over_mode){proc = src_mode;}
-                if(proc == src_over_mode){proc = dst_mode;}
+                // if(proc == src_over_mode){proc = dst_mode;}
                 if(proc == dst_out_mode){proc = clear_mode;}
                 if(proc == src_atop_mode){proc = src_in_mode;}
                 if(proc == xor_mode){proc = src_out_mode;}
