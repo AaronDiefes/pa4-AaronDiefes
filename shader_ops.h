@@ -14,8 +14,17 @@
 
 class MyBMShader:public GShader{
   public: 
-    MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {}
-    ~MyBMShader(){}
+    MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {
+        std::cout << "MyBMShader constructor called" << std::endl;
+        std::cout << "fDevice width: " << fDevice.width() << ", height: " << fDevice.height() << std::endl;
+        std::cout << "fMat values: " << std::endl;
+        std::cout << fMat[0] << ", " << fMat[1] << ", " << fMat[2] << std::endl;
+        std::cout << fMat[3] << ", " << fMat[4] << ", " << fMat[5] << std::endl;
+    }
+
+    ~MyBMShader() {
+        std::cout << "MyBMShader destructor called" << std::endl;
+    }
 
     bool isOpaque() override{
         return fDevice.isOpaque();
