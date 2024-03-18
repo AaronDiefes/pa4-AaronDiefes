@@ -283,12 +283,13 @@ template<typename Proc> void blitRow(int x, int y, int n, Proc blend, GBitmap fD
             dst[i] = p;
         }
     }
-    // else{
-    //     for(int i = 0; i < n; i++){
-    //         GPixel p = blend(src, dst[i]);
-    //         dst[i] = p;
-    //     }
-    // }
+    else{
+        assert(true);
+        for(int i = 0; i < n; i++){
+            GPixel p = blend(src, dst[i]);
+            dst[i] = p;
+        }
+    }
 }
 template<typename Proc> void shadeBlendRow(int x, int y, int n, Proc blend, GBitmap fDevice, GPixel src[]){
     GPixel* dst = fDevice.getAddr(x, y);

@@ -148,7 +148,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
         GShader* sh = paint.getShader();
         if(sh->setContext(ctm[ctm.size() - 1])){
             GBlendMode mode_type = paint.getBlendMode();
-            BlendProc proc = gProcs[(int)mode_type];
+            proc = gProcs[(int)mode_type];
             if(sh->isOpaque()){
                 if(proc == src_over_mode){proc = src_mode;}
                 if(proc == src_over_mode){proc = dst_mode;}
@@ -161,10 +161,10 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
     else{
         GColor color = paint.getColor();
         GBlendMode mode_type = paint.getBlendMode();
-        BlendProc proc = gProcs[(int)mode_type];
+        proc = gProcs[(int)mode_type];
         // BlendProc proc = getBlendMode(gProcs[(int)mode_type], color);
-        // GPixel src = unpremult(color);
-        GPixel src = GPixel_PackARGB(255, 255, 0, 0);
+        src = unpremult(color);
+        // src = GPixel_PackARGB(255, 255, 0, 0);
 
 
         if(color.a == 1){
@@ -231,6 +231,7 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
         //loop through active edges an given y value
         while (i < edges.size() && edges[i].isValid(y)) {
             int x = GRoundToInt(edges[i].eval(y));
+    
             if (w == 0) {
                 L = x;
             }
@@ -251,7 +252,10 @@ void MyCanvas::drawPath(const GPath& path, const GPaint& paint){
                     }
                 }
                 else{
-                    blitRow(L, y, R - L, proc, fDevice, src);
+                    if(R-L > 0){
+                        blitRow(L, y, R - L, proc, fDevice, src);
+
+                    }
                 }
             }
 
