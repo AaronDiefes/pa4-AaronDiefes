@@ -15,6 +15,7 @@
 class MyBMShader:public GShader{
   public: 
     MyBMShader(const GBitmap& device, const GMatrix& mat) : fDevice(device), fMat(mat) {}
+    ~MyBMShader(){}
 
     bool isOpaque() override{
         return fDevice.isOpaque();
