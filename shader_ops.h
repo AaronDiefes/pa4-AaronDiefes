@@ -18,6 +18,7 @@ class MyBMShader:public GShader{
       fDevice = device;
       fMat = mat;
     }
+    ~MyBMShader(){}
 
     bool isOpaque() override{
         return fDevice.isOpaque();
