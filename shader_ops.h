@@ -27,6 +27,7 @@ class MyBMShader:public GShader{
           inv = *inverted;
           return true;
         }
+        inv = fMat;
         return false;
     }
 
