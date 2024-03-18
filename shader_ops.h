@@ -85,8 +85,8 @@ class MyBMShader:public GShader{
       return y;
     }
   private:
-    const GBitmap fDevice;
-    const GMatrix fMat;
+    GBitmap fDevice;
+    GMatrix fMat;
     GMatrix inv;
 };
 
