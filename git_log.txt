@@ -1,0 +1,131 @@
+commit 75aafd4673028b3815f064d12ef4e1d5a89d3562
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 14:13:56 2024 -0400
+
+    dsa
+
+commit 3107d045634d29510bf919635a1872bfad423f24
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 14:10:23 2024 -0400
+
+    ges
+
+commit eae1c75ae76e903c4ca53917681d053045c9d230
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 13:57:54 2024 -0400
+
+    asdf
+
+commit 880ee26c7fdfd1273d6907e3e7f8a56f79c05d01
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 12:31:13 2024 -0400
+
+    adsf
+
+commit 69e12584a25466a786dcf9788f24f2bcc0b98ec6
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 12:26:54 2024 -0400
+
+    working with destructor
+
+commit 3e5fed94eb45b149ea8cc95de7fe501b73d36327
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 12:23:15 2024 -0400
+
+    asfd
+
+commit b41e30de79ce8aef19383e074b6f61a959c1bf1c
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 12:14:11 2024 -0400
+
+    asdg
+
+commit 5e8888091c74c5986c3022991ad17895316cb1c9
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 09:21:10 2024 -0400
+
+    a
+
+commit b3d43d3c347b08fcdd4a1d50ec82bab0f865a541
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 09:12:10 2024 -0400
+
+    only pa4 bench
+
+commit 83596cf99c675297a4665bf2b1b8415e8fd789cd
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Mon Mar 18 08:59:08 2024 -0400
+
+    Attempted to add sentinal value to gradient_colors
+
+commit e56ef2c368d7f13c1df0967dedc89612e056132e
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 23:34:46 2024 -0400
+
+    eliminated extra code
+
+commit 81b575ef058fb59fad7d32e08d2dc8e5b23e4fd7
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 22:57:35 2024 -0400
+
+    passing all tests
+
+commit 4f3d5861d2b330fccfd4ea4b98e2d82c77a92bdd
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 22:47:17 2024 -0400
+
+    testing failed test on vm
+
+commit 5b3c3e8d57cdc25c221764c1715f79a0ea1992bf
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 22:26:46 2024 -0400
+
+    fully functioning
+
+commit b7f8065d9de4a8b8029319ab11a92eeefc4d4513
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 20:22:16 2024 -0400
+
+    still not drawing anything
+
+commit 7a22e5f29f11fa4e624f1db086fdfeef04cbeb96
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 17 17:27:00 2024 -0400
+
+    seg faulting
+
+commit 760860a7da3b2aeba21dbae61fadb4d101f42233
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Tue Mar 12 21:55:15 2024 -0400
+
+    passing all tests, only drawPath left
+
+commit 79626d7dc798bdd6d7636a91c77a70256073998b
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Sun Mar 3 19:16:24 2024 -0500
+
+    setContext and shadeRow fully functioning
+
+commit b650d7d7c4e7f534bae85ab6d08809439f787f92
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Thu Feb 29 11:01:08 2024 -0500
+
+    working on defining gradient shader
+
+commit 19cc9ac3dd711eafb3b6cb0f32d89cf5f06ae2b5
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Thu Feb 29 10:54:32 2024 -0500
+
+    Set up GPath methods
+
+commit cf9a51b6c575525e8c2613e8e7aed666b1f0ad59
+Author: Aaron Diefes <awd18@duke.edu>
+Date:   Thu Feb 29 10:47:01 2024 -0500
+
+    set up drawPath
+
+commit 0bd5a9871b92b9ce53409adc6aba0c014d563123
+Author: Michael Reed <mike@reedtribe.org>
+Date:   Wed Feb 28 18:03:11 2024 -0500
+
+    first commit
